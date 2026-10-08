@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Seja revendedor do Caderneta</title>
+<meta name="description" content="Indique o Caderneta e receba 50% de comissão por venda. Afiliação gratuita pela Cakto, com aprovação do time do Caderneta.">
+<meta name="theme-color" content="#0E6B5C">
+<meta property="og:title" content="Seja revendedor do Caderneta">
+<meta property="og:description" content="Indique o Caderneta e receba 50% de comissão por venda, pela Cakto.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230E6B5C'/%3E%3Cpath d='M41 23.5A13 13 0 1 0 41 40.5' fill='none' stroke='%23fff' stroke-width='7.5' stroke-linecap='round'/%3E%3Ccircle cx='46.5' cy='32' r='4.2' fill='%23F58A5C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Schibsted+Grotesk:wght@400..700&display=swap">
+<style>
+/* Layout: topo com marca; abertura com a proposta e o número da comissão em destaque; passos numerados; o que se vende; regras; dúvidas; chamada final. */
+:root{
+  --bg:#EFF2F0; --surface:#FFFFFF; --ink:#14201C; --muted:#56655F; --line:#DCE3E0;
+  --accent:#0E6B5C; --accent-ink:#FFFFFF; --accent-soft:#DDEDE8;
+  --deep:#0B3F37; --deep-ink:#EAF4F0; --deep-muted:#A9C9BF; --s-out:#eb6834;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0F1513; --surface:#171E1B; --ink:#EAF0ED; --muted:#9AA8A2; --line:#2A3430;
+    --accent:#4CC2A4; --accent-ink:#06231C; --accent-soft:#1C3A32;
+    --deep:#0B2A25; --deep-ink:#EAF4F0; --deep-muted:#9DBDB3; --s-out:#d95926;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.025em;line-height:1.06;margin:0;text-wrap:balance}
+h1{font-weight:800;font-size:clamp(36px,6vw,62px)}
+h2{font-weight:800;font-size:clamp(27px,4vw,40px)}
+h3{font-weight:700;font-size:21px;letter-spacing:-.01em;line-height:1.2}
+p{margin:0}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+.logo{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.03em;line-height:1;color:var(--ink);text-decoration:none}
+.logo svg{width:32px;height:32px;flex:none}
+.logo .c{stroke:var(--accent)} .logo .p{fill:var(--s-out)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 22px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--body);font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;text-align:center}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.small{min-height:42px;padding:0 16px;font-size:15px}
+.fine{font-size:14px;color:var(--muted)}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px}
+
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:40px;align-items:center;padding-block:28px 64px}
+.hero-copy{display:grid;gap:20px;min-width:0}
+.lead{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:48ch}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.stat{background:var(--deep);color:var(--deep-ink);border-radius:18px;padding:30px;display:grid;gap:8px;min-width:0}
+.stat b{font-family:var(--display);font-weight:800;font-size:clamp(72px,11vw,120px);line-height:.9;letter-spacing:-.04em}
+.stat span{font-size:19px;font-weight:600}
+.stat small{font-size:14px;color:var(--deep-muted)}
+
+section.band{padding-block:60px}
+.band.alt{background:var(--surface);border-block:1px solid var(--line)}
+.head{display:grid;gap:10px;max-width:60ch;margin-bottom:30px}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px;counter-reset:s;list-style:none;margin:0;padding:0}
+.steps li{counter-increment:s;display:grid;gap:8px;align-content:start;min-width:0}
+.steps li::before{content:counter(s);font-family:var(--display);font-weight:800;font-size:44px;line-height:1;color:var(--s-out)}
+.steps p{color:var(--muted)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px;align-items:start}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.list li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+.list li svg{width:18px;height:18px;margin-top:4px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.list.yes svg{stroke:var(--accent)} .list.no svg{stroke:var(--s-out)}
+.faq{display:grid;gap:0;max-width:760px}
+.faq details{border-top:1px solid var(--line);padding:16px 0}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.01em;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:24px;font-weight:500;color:var(--muted);flex:none}
+.faq details[open] summary::after{content:"−"}
+.faq p{color:var(--muted);margin-top:10px;max-width:65ch}
+.last{text-align:center}
+.last .wrap{display:grid;gap:18px;justify-items:center}
+footer{padding-block:28px 40px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;align-items:center}
+@media (max-width:860px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:26px;padding-block:12px 46px}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two{grid-template-columns:minmax(0,1fr);gap:28px}
+  section.band{padding-block:46px}
+}
+@media (max-width:480px){ .steps{grid-template-columns:minmax(0,1fr)} }
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../conheca/" aria-label="Caderneta"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="c" d="M43.38 19.96A18 18 0 1 0 43.38 44.04" stroke-width="10" stroke-linecap="round"/><circle class="p" cx="51" cy="32" r="5.5"/></svg>Caderneta</a>
+  <a class="btn small" href="../conheca/">Conhecer o app</a>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <div class="hero-copy">
+      <span class="eyebrow">Programa de revendedores</span>
+      <h1>Indique o Caderneta e ganhe em cada venda.</h1>
+      <p class="lead">Você divulga com o seu link, a pessoa assina, e a comissão cai para você. A afiliação é gratuita e feita pela Cakto, que registra as vendas e faz os repasses.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="https://app.cakto.com.br/affiliate/invite/51858aa8-5de3-455d-9108-d02c3f9eb926" target="_blank" rel="noopener">Quero ser revendedor</a>
+        <a class="btn" href="#como">Como funciona</a>
+      </div>
+      <p class="fine">Cada pedido de afiliação passa por aprovação antes de liberar o link.</p>
+    </div>
+    <div class="stat">
+      <b>50%</b>
+      <span>de comissão por venda</span>
+      <small>Sobre a assinatura de R$ 19,90 por mês ou de R$ 149,90 por ano. Os valores e os repasses são calculados e pagos pela Cakto, conforme as regras e taxas dela.</small>
+    </div>
+  </section>
+
+  <section class="band alt" id="como">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Como funciona</span>
+        <h2>Quatro passos, do pedido à comissão.</h2>
+      </div>
+      <ol class="steps">
+        <li><h3>Peça a afiliação</h3><p>Clique em "Quero ser revendedor" e entre com a sua conta da Cakto. Se ainda não tiver, crie a sua por lá.</p></li>
+        <li><h3>Aguarde a aprovação</h3><p>Nós analisamos cada pedido. Quando for aprovado, o seu link fica disponível no painel da Cakto.</p></li>
+        <li><h3>Divulgue o seu link</h3><p>No painel da Cakto você pega o seu link exclusivo, que leva para a página do Caderneta.</p></li>
+        <li><h3>Receba pela Cakto</h3><p>A venda feita pelo seu link fica registrada no seu painel, com a comissão correspondente.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap two">
+      <div style="display:grid;gap:16px">
+        <span class="eyebrow">O que você vai indicar</span>
+        <h2>Um app simples de explicar.</h2>
+        <p class="lead">O Caderneta é um app de controle de gastos. A pessoa testa 14 dias de graça, sem cartão, e depois assina por R$ 19,90 por mês ou R$ 149,90 por ano.</p>
+        <ul class="list yes">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><span>Lançamento de gastos em segundos, com Pix, cartão, boleto ou dinheiro</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><span>Parcelas que entram sozinhas nos meses seguintes</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><span>Limite por categoria, com aviso antes de estourar</span></li>
+        </ul>
+        <p><a href="../conheca/">Ver a página que o seu link divulga</a></p>
+      </div>
+      <div style="display:grid;gap:16px">
+        <span class="eyebrow">Regras de divulgação</span>
+        <h2>O que pedimos de quem revende.</h2>
+        <ul class="list no">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Não prometa ganho, economia ou resultado garantido. Diga o que o app faz.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Não envie mensagens em massa nem insista com quem não pediu.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Não se apresente como o Caderneta nem crie perfis que se passem pela marca.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Não altere o preço nem invente condições que não estão na página de vendas.</span></li>
+        </ul>
+        <p class="fine">Quem descumprir essas regras pode ter a afiliação cancelada.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Dúvidas</span>
+        <h2>Antes de pedir a afiliação.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Preciso pagar para ser revendedor?</summary><p>Não. A afiliação é gratuita. Você só precisa de uma conta na Cakto.</p></details>
+        <details><summary>Preciso ser cliente do Caderneta?</summary><p>Não é obrigatório, mas ajuda: quem usa o app explica melhor. Você pode testar por 14 dias sem pagar.</p></details>
+        <details><summary>Como e quando eu recebo?</summary><p>Os repasses são feitos pela Cakto, direto na sua conta de lá. Prazos, taxas e regras de saque são os da plataforma e aparecem no seu painel.</p></details>
+        <details><summary>Por quanto tempo a indicação vale?</summary><p>A venda é atribuída ao último link de afiliado em que a pessoa clicou, por até 30 dias depois do clique.</p></details>
+        <details><summary>Todo pedido é aprovado?</summary><p>Não necessariamente. Analisamos cada pedido para manter a divulgação alinhada com as regras acima.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="band last">
+    <div class="wrap">
+      <h2>Comece a indicar o Caderneta.</h2>
+      <a class="btn primary" href="https://app.cakto.com.br/affiliate/invite/51858aa8-5de3-455d-9108-d02c3f9eb926" target="_blank" rel="noopener">Quero ser revendedor</a>
+      <p class="fine">Você será levado à Cakto para pedir a afiliação.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Caderneta · programa de revendedores</span>
+    <span><a href="../conheca/">Conhecer o app</a> · <a href="../">Entrar</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

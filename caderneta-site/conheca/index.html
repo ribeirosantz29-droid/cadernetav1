@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Caderneta: contas, cartões e gastos organizados</title>
+<meta name="description" content="Controle financeiro para quem desistiu da planilha: gastos do dia a dia, contas de todo mês, parcelas e as faturas de cada cartão em um lugar só. Veja quanto sobrou no mês e quanto dá para gastar por dia. 14 dias grátis, sem cartão.">
+<meta name="theme-color" content="#0E6B5C">
+<meta property="og:title" content="Caderneta: contas, cartões e gastos organizados">
+<meta property="og:description" content="Gastos, contas de todo mês, parcelas e cartões de crédito em um lugar só. Veja quanto sobrou e quanto dá para gastar por dia. 14 dias grátis, sem cartão.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230E6B5C'/%3E%3Cpath d='M41 23.5A13 13 0 1 0 41 40.5' fill='none' stroke='%23fff' stroke-width='7.5' stroke-linecap='round'/%3E%3Ccircle cx='46.5' cy='32' r='4.2' fill='%23F58A5C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Schibsted+Grotesk:wght@400..700&display=swap">
+<style>
+/* Layout: abertura em duas colunas (promessa + celular com a tela do app); dores; três passos; vídeo; o que fica automático; Juntos; planilha x Caderneta; preço; dúvidas; chamada final. No celular, uma barra fixa de teste grátis acompanha a rolagem. */
+:root{
+  --bg:#EFF2F0; --surface:#FFFFFF; --surface-2:#F5F7F6; --ink:#14201C; --muted:#56655F; --line:#DCE3E0;
+  --accent:#0E6B5C; --accent-ink:#FFFFFF; --accent-soft:#DDEDE8; --track:#E7ECEA;
+  --deep:#0B3F37; --deep-ink:#EAF4F0; --deep-muted:#A9C9BF; --mint:#7FD6BE;
+  --s-in:#1baf7a; --s-out:#eb6834; --crit:#d03b3b;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0F1513; --surface:#171E1B; --surface-2:#1D2622; --ink:#EAF0ED; --muted:#9AA8A2; --line:#2A3430;
+    --accent:#4CC2A4; --accent-ink:#06231C; --accent-soft:#1C3A32; --track:#242E2A;
+    --deep:#0B2A25; --deep-ink:#EAF4F0; --deep-muted:#9DBDB3;
+    --s-in:#199e70; --s-out:#d95926;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+img,svg{max-width:100%}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.025em;line-height:1.06;margin:0;text-wrap:balance}
+h1{font-weight:800;font-size:clamp(36px,5.4vw,60px)}
+h2{font-weight:800;font-size:clamp(28px,4vw,42px)}
+h3{font-weight:700;font-size:21px;letter-spacing:-.01em;line-height:1.2}
+p{margin:0}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+.hl{color:var(--accent);white-space:nowrap}
+.hl2{color:var(--accent)}
+.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+.logo{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.03em;line-height:1;color:var(--ink);text-decoration:none}
+.logo svg{width:32px;height:32px;flex:none}
+.logo .c{stroke:var(--accent)} .logo .p{fill:var(--s-out)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border-radius:26px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--body);font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;text-align:center}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.small{min-height:44px;padding:0 18px;font-size:15px}
+.btn.mint{background:var(--mint);border-color:var(--mint);color:#06231C}
+
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px}
+header.top nav{display:flex;align-items:center;gap:8px}
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:48px;align-items:center;padding-block:28px 72px}
+.hero-copy{display:grid;gap:22px;min-width:0}
+.lead{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:44ch}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fine{font-size:14px;color:var(--muted)}
+.trust{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:15px;font-weight:600}
+.trust li{display:inline-flex;align-items:center;gap:7px}
+.trust .i{stroke:var(--accent);stroke-width:2.8}
+
+/* celular com a tela do app */
+.phone{justify-self:center;width:min(100%,348px);border:10px solid var(--ink);border-radius:44px;background:var(--bg);overflow:hidden;box-shadow:0 30px 70px -34px rgba(11,63,55,.6);display:grid}
+.ph{display:grid;gap:12px;padding:18px 14px 12px}
+.ph-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ph-top .logo{font-size:17px;gap:6px} .ph-top .logo svg{width:22px;height:22px}
+.ph-r{display:flex;gap:6px;align-items:center}
+.pillx{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:17px;background:var(--surface);font-size:13px;font-weight:600}
+.pillx .i{width:13px;height:13px}
+.circ{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none}
+.circ .i{width:15px;height:15px}
+.bignum{display:grid;gap:3px;padding-top:6px}
+.bignum small{font-size:13px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:3px}
+.bignum small .i{width:13px;height:13px}
+.bignum b{font-family:var(--display);font-weight:800;font-size:42px;line-height:1;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:4px;background:var(--accent)}
+.two{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.two b{color:var(--ink);font-variant-numeric:tabular-nums}
+.dayx{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:4px 2px 0}
+.grp{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.rw{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 11px;border-top:1px solid var(--line);font-size:14.5px}
+.rw:first-child{border-top:0}
+.rw .cat{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.rw .cat .i{width:17px;height:17px}
+.rw b{font-weight:700;display:block}
+.rw small{display:block;color:var(--muted);font-size:12px}
+.rw .v{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rw .v.in{color:var(--accent)}
+.who{display:inline-block;font-size:11px;font-weight:700;line-height:1.5;padding:0 7px;border-radius:999px;background:var(--accent-soft);color:var(--ink);margin-right:5px}
+.who.p{background:transparent;box-shadow:inset 0 0 0 1px var(--muted)}
+.comp{display:grid;gap:6px;padding:9px 12px 12px;background:var(--surface);border-top:1px solid var(--line)}
+.comp small{font-size:12px;color:var(--muted);padding-inline:4px;font-variant-numeric:tabular-nums}
+.comp-r{display:flex;align-items:center;gap:7px}
+.typed{flex:1;min-width:0;height:40px;display:flex;align-items:center;padding:0 14px;border:1.5px solid var(--accent);border-radius:20px;background:var(--surface);font-size:15px;white-space:nowrap;overflow:hidden}
+.typed::after{content:"";width:1.5px;height:18px;background:var(--accent);margin-left:2px;animation:pisca 1.1s steps(1) infinite}
+@keyframes pisca{50%{opacity:0}}
+.sendx{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+.sendx .i{stroke-width:2.8}
+.perday{font-size:13px;color:var(--muted)} .perday b{color:var(--ink)}
+.duex{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:9px 11px;display:grid;gap:8px}
+.duex-h{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.duex-h .cat{width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--s-out);display:grid;place-items:center}
+.duex-h .cat .i{width:14px;height:14px}
+.duex-r{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:8px;border-top:1px solid var(--line);font-size:14px}
+.duex-r b{display:block} .duex-r small{color:var(--muted);font-size:12px}
+.paid{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px;border:1px solid var(--line);border-radius:9px;font-size:13px;font-weight:700}
+.paid .i{width:14px;height:14px}
+.two-b{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.bt{display:flex;align-items:center;justify-content:center;gap:6px;height:42px;border-radius:21px;border:1px solid var(--line);background:var(--surface);font-size:14.5px;font-weight:700}
+.bt.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.bt .i{width:16px;height:16px;stroke-width:2.8}
+.cap{justify-self:center;font-size:13px;color:var(--muted);margin-top:10px;text-align:center}
+.side{display:grid;min-width:0}
+
+section.band{padding-block:72px}
+.band.alt{background:var(--surface);border-block:1px solid var(--line)}
+.band.deep{background:var(--deep);color:var(--deep-ink)}
+.band.deep .eyebrow{color:var(--deep-muted)}
+.band.deep p{color:var(--deep-muted)}
+.band.deep .plan p{color:var(--muted)}
+.head{display:grid;gap:12px;max-width:62ch;margin-bottom:36px}
+.head p{color:var(--muted);font-size:18px}
+
+/* dores */
+.pains{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.pain{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;display:grid;gap:8px;align-content:start}
+.band.alt .pain{background:var(--bg)}
+.pain p{color:var(--muted)}
+.answer{margin-top:28px;font-family:var(--display);font-weight:700;font-size:clamp(21px,2.6vw,27px);line-height:1.2;letter-spacing:-.015em;max-width:30ch}
+
+/* três passos */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;counter-reset:s;list-style:none;margin:0;padding:0}
+.steps li{counter-increment:s;display:grid;gap:14px;align-content:start;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px}
+.steps .n{display:flex;align-items:center;gap:10px}
+.steps .n::before{content:counter(s);width:34px;height:34px;border-radius:50%;background:var(--s-out);color:#fff;font-family:var(--display);font-weight:800;font-size:18px;display:grid;place-items:center;flex:none}
+.steps p{color:var(--muted)}
+.demo-box{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:8px;min-height:92px;align-content:center}
+
+/* vídeo */
+.spot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center}
+.spot-copy{display:grid;gap:16px;min-width:0}
+.spot-copy > p{color:var(--muted);max-width:48ch}
+.band.deep .spot-copy > p{color:var(--deep-muted)}
+.vid{justify-self:center;width:min(100%,330px)}
+.vid video{display:block;width:100%;height:auto;aspect-ratio:9/16;border-radius:22px;background:#0B3F37;border:1px solid rgba(255,255,255,.14);box-shadow:0 26px 60px -26px rgba(0,0,0,.7)}
+.checks{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:10px}
+.checks li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+.checks .i{margin-top:4px;stroke:var(--accent);stroke-width:2.8}
+
+/* o que fica automático */
+.feats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 28px}
+.feat{display:grid;gap:8px;align-content:start;min-width:0}
+.feat p{color:var(--muted)}
+.more{margin-top:32px;color:var(--muted);max-width:64ch}
+.feat .ic{width:46px;height:46px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-bottom:6px}
+.feat .ic .i{width:22px;height:22px}
+
+/* planilha x Caderneta */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.vs > div{border-radius:20px;padding:24px;display:grid;gap:14px;align-content:start}
+.vs .old{background:var(--bg);border:1px solid var(--line)}
+.band:not(.alt) .vs .old{background:var(--surface)}
+.vs .new{background:var(--deep);color:var(--deep-ink)}
+.vs ul{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+.vs li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+.vs li .i{margin-top:4px}
+.vs .old li{color:var(--muted)} .vs .old .i{stroke:var(--muted)}
+.vs .new .i{stroke:var(--mint);stroke-width:2.8}
+
+/* preço */
+.price .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:44px;align-items:center}
+.plan{background:var(--surface);color:var(--ink);border-radius:22px;padding:26px;display:grid;gap:18px;min-width:0}
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pl{position:relative;display:grid;gap:6px;align-content:start;padding:18px 16px 16px;border:1px solid var(--line);border-radius:16px;min-width:0}
+.pl.best{border:2px solid var(--accent);padding:17px 15px 15px}
+.pl-tag{position:absolute;top:-11px;left:14px;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}
+.pl-n{font-weight:700;font-size:15px;color:var(--muted)}
+.pl .val{font-family:var(--display);font-weight:800;font-size:clamp(24px,2.6vw,30px);letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pl .val small{display:block;margin-top:3px;font-family:var(--body);font-size:15px;font-weight:600;color:var(--muted);letter-spacing:0}
+.pl-s{font-size:14px;color:var(--muted)}
+.pl .btn{min-height:46px;font-size:15px;padding:0 10px;margin-top:8px}
+.plan ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.plan li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;align-items:start;font-size:16px}
+.plan li .i{margin-top:3px;stroke:var(--accent);stroke-width:2.8}
+.plan p{color:var(--muted)}
+.plan > .btn{width:100%}
+.safe{display:grid;gap:12px;margin-top:8px}
+.safe div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start}
+.safe .i{margin-top:3px;stroke:var(--mint);width:20px;height:20px}
+.safe b{color:var(--deep-ink)}
+
+.faq{display:grid;gap:0;max-width:760px}
+.faq details{border-top:1px solid var(--line);padding:16px 0}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.01em;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:24px;font-weight:500;color:var(--muted);flex:none}
+.faq details[open] summary::after{content:"−"}
+.faq p{color:var(--muted);margin-top:10px;max-width:65ch}
+
+.last{text-align:center}
+.last .wrap{display:grid;gap:20px;justify-items:center}
+.last h2{max-width:20ch}
+footer{padding-block:28px 40px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;align-items:center}
+
+/* barra fixa de teste grátis, só no celular */
+.stick{display:none}
+@media (max-width:860px){
+  .stick{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .25s ease}
+  .stick.on{transform:none}
+  .stick span{font-size:14px;font-weight:600;line-height:1.25}
+  .stick .btn{min-height:46px;padding:0 18px;font-size:15px;flex:none}
+  body{padding-bottom:76px}
+}
+
+.ck{position:fixed;left:12px;right:12px;bottom:12px;z-index:30;max-width:720px;margin-inline:auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:14px 16px;border-radius:14px;background:var(--ink);color:var(--surface);font-size:14px;line-height:1.4;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.ck[hidden]{display:none}
+.ck > span:first-child{flex:1 1 260px}
+.ck a{color:inherit;text-decoration:underline}
+.ck-b{display:flex;gap:8px}
+.ck button{height:38px;padding:0 16px;border-radius:9px;border:1px solid currentColor;background:none;color:inherit;font:inherit;font-weight:700;cursor:pointer}
+.ck button.yes{background:var(--surface);color:var(--ink);border-color:var(--surface)}
+@media (max-width:860px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:36px;padding-block:8px 52px}
+  .pains,.steps,.feats,.vs{grid-template-columns:minmax(0,1fr)}
+  .feats{gap:26px}
+  .spot{grid-template-columns:minmax(0,1fr);gap:30px}
+  .price .wrap{grid-template-columns:minmax(0,1fr);gap:30px}
+  section.band{padding-block:52px}
+  header.top .btn.primary{display:none}
+  .ck{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+@media (min-width:561px) and (max-width:860px){ .feats{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:420px){ .plans{grid-template-columns:minmax(0,1fr)} .bignum b{font-size:38px} }
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .typed::after{animation:none} .stick{transition:none} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m6 11 6-6 6 6"/></symbol>
+  <symbol id="i-in" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m6 13 6 6 6-6"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 7H6.2"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M5 16v-5l1.8-4.5h10.4L19 11v5"/><path d="M3.5 16h17"/><circle cx="7.5" cy="17.5" r="1.6"/><circle cx="16.5" cy="17.5" r="1.6"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m4 11 8-7 8 7"/><path d="M6 10v10h12V10"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><path d="M6 12h.01M12 12h.01M18 12h.01"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><path d="M7 7h.01"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-bars" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M8 17v-4M13 17V7M18 17v-7"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2.2 2.2L15 10.4"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+</svg>
+
+<header class="wrap top">
+  <a class="logo" href="./" aria-label="Caderneta"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="c" d="M43.38 19.96A18 18 0 1 0 43.38 44.04" stroke-width="10" stroke-linecap="round"/><circle class="p" cx="51" cy="32" r="5.5"/></svg>Caderneta</a>
+  <nav aria-label="Acesso"><a class="btn small" href="../">Entrar</a><a class="btn small primary" href="../#criar">Criar conta grátis</a></nav>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <div class="hero-copy">
+      <span class="eyebrow">Controle financeiro para quem desistiu da planilha</span>
+      <h1>Saiba quanto sobra no mês <span class="hl2">e quanto dá para gastar por dia.</span></h1>
+      <p class="lead">O Caderneta organiza seus gastos, as contas de todo mês e as faturas de cada cartão. Você lança em dois toques e vê na hora o que já está comprometido e o que ainda está livre.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="../#criar" id="ctaTopo">Testar grátis por 14 dias</a>
+        <a class="btn" href="#video"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg>Ver em 1 minuto</a>
+      </div>
+      <ul class="trust">
+        <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Sem cartão para testar</li>
+        <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>No celular e no computador</li>
+        <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Cancele quando quiser</li>
+      </ul>
+    </div>
+
+    <div class="side">
+      <div class="phone" role="img" aria-label="Tela do Caderneta: sobrou R$ 1.881,60 em outubro, dá R$ 72,37 por dia até o dia 31, uma conta a vencer amanhã, os gastos de hoje e os botões Despesa e Receita">
+        <div class="ph">
+          <div class="ph-top">
+            <span class="logo"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="c" d="M43.38 19.96A18 18 0 1 0 43.38 44.04" stroke-width="10" stroke-linecap="round"/><circle class="p" cx="51" cy="32" r="5.5"/></svg>Caderneta</span>
+            <span class="ph-r"><span class="pillx"><svg class="i" aria-hidden="true"><use href="#i-back"/></svg>outubro<svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span><span class="circ"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></span></span>
+          </div>
+          <div class="bignum"><small>Sobrou em outubro<svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></small><b>R$ 1.881,60</b></div>
+          <div class="meter"><i style="width:69.7%"></i></div>
+          <div class="two"><span>Gastou <b>R$ 4.318,40</b></span><span>Entrou <b>R$ 6.200,00</b></span></div>
+          <div class="perday">Dá <b>R$ 72,37 por dia</b> até o dia 31.</div>
+          <div class="duex">
+            <div class="duex-h"><span class="cat"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg></span><b>Contas a vencer</b></div>
+            <div class="duex-r"><span><b>Internet</b><small>Vence amanhã · R$ 99,90</small></span><span class="paid"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Paguei</span></div>
+          </div>
+          <div class="dayx">Hoje</div>
+          <div class="grp">
+            <div class="rw"><span class="cat"><svg class="i" aria-hidden="true"><use href="#i-cart"/></svg></span><span><b>Padaria</b><small>Mercado</small></span><span class="v">− R$ 45,90</span></div>
+            <div class="rw"><span class="cat"><svg class="i" aria-hidden="true"><use href="#i-car"/></svg></span><span><b>Uber</b><small>Transporte</small></span><span class="v">− R$ 23,90</span></div>
+          </div>
+        </div>
+        <div class="comp two-b"><span class="bt pri"><svg class="i" aria-hidden="true"><use href="#i-minus"/></svg>Despesa</span><span class="bt"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Receita</span></div>
+      </div>
+      <span class="cap">Tela de exemplo, com valores fictícios.</span>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Parece com você?</span>
+        <h2>O dinheiro entra, some, e você fica sem saber onde foi.</h2>
+      </div>
+      <div class="pains">
+        <div class="pain"><h3>"Cadê o meu salário?"</h3><p>Chega o dia 20 e a conta está quase zerada. Você lembra das contas grandes, mas não dos gastos pequenos que somaram.</p></div>
+        <div class="pain"><h3>A planilha durou duas semanas</h3><p>Abrir o arquivo, achar a linha, preencher coluna por coluna. Dá trabalho demais para manter todo dia.</p></div>
+        <div class="pain"><h3>A parcela que você esqueceu</h3><p>A compra em 6x de três meses atrás continua vindo na fatura, e o mês que parecia folgado já começa apertado.</p></div>
+      </div>
+      <p class="answer">O problema não é falta de disciplina. É que anotar dá trabalho. O Caderneta tira o trabalho.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Como funciona</span>
+        <h2>Três passos. O primeiro você faz uma vez só.</h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="n"><h3>Cadastre o que se repete</h3></span>
+          <div class="demo-box"><div class="grp"><div class="rw"><span class="cat"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg></span><span><b>Aluguel</b><small>todo mês · dia 5</small></span><span class="v">− R$ 1.200,00</span></div><div class="rw"><span class="cat"><svg class="i" aria-hidden="true"><use href="#i-card"/></svg></span><span><b>Nubank</b><small>fecha dia 3 · vence dia 10</small></span><span class="v"></span></div></div></div>
+          <p>Aluguel, internet, assinaturas, salário e os seus cartões. Você informa uma vez e o Caderneta lança sozinho todo mês.</p>
+        </li>
+        <li>
+          <span class="n"><h3>Lance o dia a dia em dois toques</h3></span>
+          <div class="demo-box"><div class="two-b"><span class="bt pri"><svg class="i" aria-hidden="true"><use href="#i-minus"/></svg>Despesa</span><span class="bt"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Receita</span></div></div>
+          <p>Toque em Despesa, ponha o valor e salve. A categoria vem sugerida, e a compra parcelada já entra em cada mês.</p>
+        </li>
+        <li>
+          <span class="n"><h3>Veja quanto sobrou</h3></span>
+          <div class="demo-box"><div class="bignum" style="padding:0"><small>Sobrou em outubro</small><b style="font-size:32px">R$ 1.881,60</b></div><div class="meter"><i style="width:69.7%"></i></div><div class="perday">Dá <b>R$ 72,37 por dia</b> até o dia 31.</div></div>
+          <p>Um número só na tela inicial: o que entrou menos o que saiu, e quanto dá para gastar por dia até o fim do mês.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band deep" id="video">
+    <div class="wrap spot">
+      <div class="spot-copy">
+        <span class="eyebrow">Vídeo</span>
+        <h2>Veja funcionando antes de criar a conta.</h2>
+        <p>Um minuto, sem enrolação: do primeiro gasto anotado ao Juntos, passando por cartões, parcelas e contas de todo mês. O vídeo não tem som; as legendas explicam cada passo.</p>
+        <div class="cta-row"><a class="btn mint" href="../#criar">Testar grátis por 14 dias</a></div>
+      </div>
+      <div class="vid">
+        <video controls playsinline preload="none" poster="caderneta-apresentacao-capa.jpg" width="720" height="1280" aria-label="Vídeo de apresentação do Caderneta, com legendas e sem som">
+          <source src="caderneta-apresentacao.mp4" type="video/mp4">
+          Seu navegador não reproduz este vídeo. <a href="caderneta-apresentacao.mp4">Abra o vídeo</a>.
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">O que você controla</span>
+        <h2>Tudo o que mexe no seu dinheiro, em um lugar só.</h2>
+      </div>
+      <div class="feats">
+        <div class="feat">
+          <span class="ic"><svg class="i" aria-hidden="true"><use href="#i-card"/></svg></span>
+          <h3>Todos os seus cartões</h3>
+          <p>Cadastre cada cartão com limite, fechamento e vencimento. Veja quanto do limite já usou, a fatura aberta, a fechada e as compras de cada um.</p>
+        </div>
+        <div class="feat">
+          <span class="ic"><svg class="i" aria-hidden="true"><use href="#i-repeat"/></svg></span>
+          <h3>Contas de todo mês</h3>
+          <p>Aluguel, internet, Netflix, salário: cadastre uma vez e o lançamento entra sozinho no dia marcado, até você encerrar.</p>
+        </div>
+        <div class="feat">
+          <span class="ic"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg></span>
+          <h3>Parcelas no mês certo</h3>
+          <p>Comprou em 6x? Informe uma vez e cada parcela entra no mês dela, no cartão certo. Você abre dezembro e já vê o que está comprometido.</p>
+        </div>
+        <div class="feat">
+          <span class="ic"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg></span>
+          <h3>Contas a vencer</h3>
+          <p>O que vence hoje e amanhã aparece no topo da tela, com o botão "Paguei". A fatura de cada cartão também.</p>
+        </div>
+        <div class="feat">
+          <span class="ic"><svg class="i" aria-hidden="true"><use href="#i-tag"/></svg></span>
+          <h3>Limite por categoria</h3>
+          <p>Defina quanto quer gastar com mercado ou lazer. O Caderneta mostra quando você chega perto do limite e de quanto passou.</p>
+        </div>
+        <div class="feat">
+          <span class="ic"><svg class="i" aria-hidden="true"><use href="#i-bars"/></svg></span>
+          <h3>Os próximos meses à vista</h3>
+          <p>Veja quanto de novembro e dezembro já tem destino, somando parcelas e contas fixas, e compare com os últimos 6 meses.</p>
+        </div>
+      </div>
+      <p class="more">E ainda: importação de planilha e de extrato do banco, categoria sugerida enquanto você digita e exportação dos lançamentos em CSV.</p>
+    </div>
+  </section>
+
+  <section class="band" id="juntos">
+    <div class="wrap spot">
+      <div class="spot-copy">
+        <span class="eyebrow">Juntos · para quem divide as contas</span>
+        <h2>Chega de "quem pagou o quê?" no fim do mês.</h2>
+        <p>Ligue a sua conta à do seu par. Os gastos da casa aparecem numa tela só, com o nome de quem lançou e a parte de cada um. O resto da sua vida financeira continua só seu.</p>
+        <ul class="checks">
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Convite por código: um gera, o outro digita, pronto.</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Só aparece para os dois o que for marcado como conjunto.</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Total do mês e quanto cada um colocou, em reais e em porcentagem.</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Cada um edita só o que lançou, e qualquer um pode desfazer a ligação.</span></li>
+        </ul>
+        <div class="cta-row"><a class="btn primary" href="../#criar">Testar grátis por 14 dias</a></div>
+      </div>
+      <div class="side">
+        <div class="phone" role="img" aria-label="Tela Juntos: gastos conjuntos de R$ 2.480,00 em outubro, R$ 1.310,00 lançados por você e R$ 1.170,00 pela Bia">
+          <div class="ph">
+            <div class="ph-top">
+              <span class="ph-r"><span class="circ"><svg class="i" aria-hidden="true"><use href="#i-back"/></svg></span><b style="font-family:var(--display);font-size:19px;letter-spacing:-.02em">Juntos</b></span>
+              <span class="pillx"><svg class="i" aria-hidden="true"><use href="#i-back"/></svg>outubro<svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span>
+            </div>
+            <div class="bignum"><small>Gastos conjuntos em outubro</small><b>R$ 2.480,00</b></div>
+            <div class="meter"><i style="width:52.8%"></i></div>
+            <div class="two"><span>Você <b>R$ 1.310,00 · 53%</b></span><span>Bia <b>R$ 1.170,00 · 47%</b></span></div>
+            <div class="grp" style="margin-top:4px">
+              <div class="rw"><span class="cat"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg></span><span><b>Aluguel</b><small><span class="who">Você</span>Moradia · todo mês</small></span><span class="v">− R$ 1.200,00</span></div>
+              <div class="rw"><span class="cat"><svg class="i" aria-hidden="true"><use href="#i-cart"/></svg></span><span><b>Compra do mês</b><small><span class="who p">Bia</span>Mercado</small></span><span class="v">− R$ 640,00</span></div>
+              <div class="rw"><span class="cat"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg></span><span><b>Conta de luz</b><small><span class="who p">Bia</span>Moradia</small></span><span class="v">− R$ 530,00</span></div>
+              <div class="rw"><span class="cat"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg></span><span><b>Internet</b><small><span class="who">Você</span>Moradia · todo mês</small></span><span class="v">− R$ 110,00</span></div>
+            </div>
+          </div>
+        </div>
+        <span class="cap">Tela de exemplo, com valores fictícios.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Planilha ou Caderneta</span>
+        <h2>A planilha funciona. Até o dia em que você para de abrir.</h2>
+      </div>
+      <div class="vs">
+        <div class="old">
+          <h3>Na planilha</h3>
+          <ul>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg><span>Abrir o arquivo, achar a linha e preencher coluna por coluna.</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg><span>Copiar cada parcela para os meses seguintes, à mão.</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg><span>Repetir as contas fixas todo mês.</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg><span>Difícil de mexer no celular, na fila do mercado.</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-x"/></svg><span>Para dividir com alguém, a pessoa vê o arquivo inteiro.</span></li>
+          </ul>
+        </div>
+        <div class="new">
+          <h3>No Caderneta</h3>
+          <ul>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Tocar em Despesa, pôr o valor e salvar.</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>As parcelas entram sozinhas, cada uma no mês dela.</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>As contas fixas aparecem todo mês sem você fazer nada.</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Feito para o celular, e abre igual no computador.</span></li>
+            <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>No Juntos, a outra pessoa vê só o que for conjunto.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band deep price" id="preco">
+    <div class="wrap">
+      <div style="display:grid;gap:16px">
+        <span class="eyebrow">Preço</span>
+        <h2>Teste 14 dias antes de pagar qualquer coisa.</h2>
+        <p>Você cria a conta só com e-mail e senha e usa tudo por 14 dias. Gostou? Escolhe o plano e continua de onde parou. Os dois planos têm tudo o que o Caderneta faz.</p>
+        <div class="safe">
+          <div><svg class="i" aria-hidden="true"><use href="#i-card"/></svg><span><b>Sem cartão no teste.</b> Se não assinar, nada é cobrado.</span></div>
+          <div><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg><span><b>Cancele quando quiser.</b> Você mantém o acesso até o fim do período que já pagou.</span></div>
+          <div><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span><b>Seus dados continuam seus.</b> Dá para exportar os lançamentos em CSV quando quiser.</span></div>
+        </div>
+      </div>
+      <div class="plan">
+        <div class="plans">
+          <div class="pl best">
+            <span class="pl-tag">R$ 88,90 a menos no ano</span>
+            <span class="pl-n">Anual</span>
+            <span class="val">R$ 149,90 <small>por ano</small></span>
+            <span class="pl-s">Equivale a R$ 12,49 por mês</span>
+            <a class="btn primary" href="https://pay.cakto.com.br/yozsp3r" target="_blank" rel="noopener">Assinar o anual</a>
+          </div>
+          <div class="pl">
+            <span class="pl-n">Mensal</span>
+            <span class="val">R$ 19,90 <small>por mês</small></span>
+            <span class="pl-s">R$ 238,80 em 12 meses</span>
+            <a class="btn" href="https://pay.cakto.com.br/35ept6c_1171076" target="_blank" rel="noopener">Assinar o mensal</a>
+          </div>
+        </div>
+        <ul>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Lançamento em dois toques, com categoria sugerida</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Cartões de crédito com limite, faturas e compras</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Parcelas e contas de todo mês lançadas sozinhas</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Contas a vencer, limites por categoria e próximos meses</span></li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>Importação de planilha e Juntos, para dividir as contas a dois</span></li>
+        </ul>
+        <a class="btn primary" href="../#criar">Testar grátis por 14 dias</a>
+        <p class="fine">Pagamento por cartão de crédito ou Pix, processado pela Cakto, que acrescenta R$ 0,99 de taxa de serviço a cada cobrança. Ao assinar, use o mesmo e-mail da sua conta no Caderneta.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Dúvidas</span>
+        <h2>O que as pessoas perguntam antes de começar.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Preciso informar cartão para testar?</summary><p>Não. O teste de 14 dias começa quando você cria a conta, só com e-mail e senha. Se você não assinar, nada é cobrado.</p></details>
+        <details><summary>Não tenho paciência para anotar. Vai funcionar para mim?</summary><p>O Caderneta foi feito para dar o mínimo de trabalho: o que se repete (contas de todo mês, parcelas, cartões) você cadastra uma vez e entra sozinho. No dia a dia, é tocar em Despesa, pôr o valor e salvar; a categoria vem sugerida. O teste de 14 dias serve justamente para você ver se o hábito pega.</p></details>
+        <details><summary>Posso cadastrar mais de um cartão de crédito?</summary><p>Sim, até 8. Cada cartão tem nome, limite, dia de fechamento e dia de vencimento. Em cada compra no crédito você escolhe o cartão, e o Caderneta mostra o limite usado, as faturas e as compras de cada um.</p></details>
+        <details><summary>O Caderneta se conecta à minha conta do banco?</summary><p>Não. Você faz os lançamentos ou importa o arquivo do extrato que baixou do banco. O app não pede acesso a banco nem a cartão.</p></details>
+        <details><summary>Posso trazer os lançamentos que já tenho?</summary><p>Sim. No menu, em "Importar planilha", você escolhe um arquivo do Excel (.xlsx) ou CSV, ou cola as linhas das suas anotações. O Caderneta mostra uma prévia, pula o que já existe e só grava depois que você confirma. Cada importação aceita até 2.000 lançamentos.</p></details>
+        <details><summary>Como funciona o Juntos?</summary><p>Cada pessoa tem a própria conta e a própria assinatura. Uma convida a outra por um código e, a partir daí, as duas veem numa tela só os lançamentos que cada uma marcar como conjunto. O que não for marcado continua particular, e qualquer uma das duas pode desfazer a ligação quando quiser.</p></details>
+        <details><summary>Como funciona o pagamento?</summary><p>É uma assinatura de R$ 19,90 por mês ou de R$ 149,90 por ano, paga com cartão de crédito ou Pix pela Cakto. A Cakto acrescenta uma taxa de serviço de R$ 0,99 a cada cobrança. Use na compra o mesmo e-mail da sua conta para o acesso ser liberado automaticamente.</p></details>
+        <details><summary>E se eu cancelar?</summary><p>Você continua usando até o fim do período já pago. Depois disso, seus lançamentos ficam guardados para consulta, mas não dá para lançar ou alterar até assinar de novo.</p></details>
+        <details><summary>Funciona no celular?</summary><p>Sim. O Caderneta abre no navegador do celular e do computador, com a mesma conta. Não precisa instalar nada.</p></details>
+        <details><summary>Quem vê os meus dados?</summary><p>Cada conta acessa apenas os próprios lançamentos. No Juntos, a outra pessoa vê somente os lançamentos que você marcar como conjunto.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt last" id="fim">
+    <div class="wrap">
+      <h2>O próximo gasto já pode ser o primeiro anotado.</h2>
+      <a class="btn primary" href="../#criar">Testar grátis por 14 dias</a>
+      <p class="fine">Sem cartão para testar. Depois, R$ 19,90 por mês ou R$ 149,90 por ano.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Caderneta · controle de gastos</span>
+    <span><a href="../">Entrar</a> · <a href="#preco">Preço</a> · <a href="../revenda/">Seja revendedor</a></span>
+  </div>
+</footer>
+
+<div class="stick" id="stick" aria-hidden="true">
+  <span>14 dias grátis,<br>sem cartão</span>
+  <a class="btn primary" href="../#criar" tabindex="-1">Testar grátis</a>
+</div>
+<script>
+// barra fixa do celular: aparece depois que o primeiro botão sai da tela e some na chamada final
+(function(){
+  var bar=document.getElementById('stick'), topo=document.getElementById('ctaTopo'), fim=document.getElementById('fim');
+  if(!bar||!topo||!('IntersectionObserver' in window)) return;
+  var vTopo=true, vFim=false;
+  function upd(){ var on=!vTopo&&!vFim; bar.classList.toggle('on',on); bar.setAttribute('aria-hidden',on?'false':'true'); bar.querySelector('a').tabIndex=on?0:-1; }
+  new IntersectionObserver(function(e){ vTopo=e[0].isIntersecting; upd(); }).observe(topo);
+  new IntersectionObserver(function(e){ vFim=e[0].isIntersecting; upd(); }).observe(fim);
+})();
+</script>
+
+<!-- Medição de anúncios (pixel da Meta). Só carrega depois que a pessoa aceita; com PIXEL vazio fica desligada. -->
+<div class="ck" id="ck" role="region" aria-label="Aviso de cookies" hidden>
+  <span>Usamos cookies para medir o resultado dos nossos anúncios no Facebook e no Instagram. Você pode recusar e usar o site normalmente. <a href="../privacidade/">Política de privacidade</a></span>
+  <span class="ck-b"><button type="button" id="ckNo">Recusar</button><button type="button" id="ckYes" class="yes">Aceitar</button></span>
+</div>
+<script>
+(function(){
+  var PIXEL='';
+  var K='cad_cookies', box=document.getElementById('ck'), v=null;
+  window.cadTrack=function(){};
+  if(!PIXEL) return;
+  try{ v=localStorage.getItem(K); }catch(e){}
+  function ligar(){
+    if(window.fbq) return;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init',PIXEL); fbq('track','PageView');
+    window.cadTrack=function(ev,dados){ fbq('track',ev,dados||{}); };
+  }
+  function escolher(r){ try{ localStorage.setItem(K,r); }catch(e){} box.hidden=true; if(r==='sim') ligar(); }
+  if(v==='sim') ligar(); else if(v!=='nao') box.hidden=false;
+  document.getElementById('ckYes').addEventListener('click',function(){ escolher('sim'); });
+  document.getElementById('ckNo').addEventListener('click',function(){ escolher('nao'); });
+  // clique para a página de pagamento conta como início de compra
+  document.addEventListener('click',function(e){ var a=e.target.closest&&e.target.closest('a[href*="pay.cakto.com.br"]'); if(a) window.cadTrack('InitiateCheckout',{value:19.9,currency:'BRL'}); });
+})();
+</script>
+</body>
+</html>
